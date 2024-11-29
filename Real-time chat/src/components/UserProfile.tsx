@@ -1,121 +1,129 @@
-import React, { useState, useEffect } from 'react';
-import axios, { AxiosResponse } from 'axios';
+import { useState, useEffect } from 'react';
+import styled from 'styled-components';
 
-// Define profile type
+// Define Profile type
 interface Profile {
-  profile_image: string;
-  bio: string;
+  username: string;
+  email: string;
   first_name: string;
   last_name: string;
-  username: string;
+  bio: string;
+  profile_image: string | null;
 }
 
-const UserProfile: React.FC = () => {
-  const [profile, setProfile] = useState<Profile>({
-    profile_image: '',
-    bio: '',
-    first_name: '',
-    last_name: '',
-    username: '',
-  });
-  const [isEditing, setIsEditing] = useState<boolean>(false);
-  const [formData, setFormData] = useState<Profile>(profile);
+interface UserProfileResponse {
+  username: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+  profile: Profile;
+}
 
-  // Fetch user profile on component mount
+// Styled components
+const Container = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f4f4f4;
+  padding: 20px;
+`;
+
+const ProfileCard = styled.div`
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: row;
+  padding: 20px;
+  max-width: 600px;
+  width: 100%;
+`;
+
+const ProfileImage = styled.div`
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .placeholder {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 16px;
+    color: #666;
+  }
+`;
+
+const ProfileDetails = styled.div`
+  flex: 2;
+  padding: 0 20px;
+
+  h2 {
+    margin: 0;
+    font-size: 24px;
+    color: #333;
+  }
+
+  p {
+    margin: 10px 0;
+    font-size: 16px;
+    color: #555;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  text-align: center;
+  color: #ff4d4f;
+  font-size: 18px;
+  padding: 20px;
+`;
+
+const UserProfile = () => {
+  const [profile, setProfile] = useState<UserProfileResponse | null>(null);
+
   useEffect(() => {
-    axios
-      .get('/api/profile/', {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-      .then((response: AxiosResponse<Profile>) => {
-        setProfile(response.data);
-        setFormData(response.data); // Initialize form data with fetched profile data
-      })
-      .catch((error) => console.error(error));
+    const storedProfile = localStorage.getItem('userData');
+    if (storedProfile) {
+      setProfile(JSON.parse(storedProfile));
+    } else {
+      setProfile(null);
+    }
   }, []);
 
-  // Handle form input changes
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
-      ...prevData,
-      [name]: value,
-    }));
-  };
-
-  // Handle profile update
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    axios
-      .put('http://localhost:8000/api/profile/', formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      })
-      .then((response: AxiosResponse<Profile>) => {
-        setProfile(response.data);
-        setIsEditing(false); // Stop editing mode after successful save
-      })
-      .catch((error) => console.error(error));
-  };
+  if (!profile) {
+    return <ErrorMessage>No profile data available. Please log in.</ErrorMessage>;
+  }
 
   return (
-    <div className="user-profile">
-      <h2>User Profile</h2>
-      <div>
-        <img src={profile.profile_image || '/default-image.jpg'} alt="Profile" />
-        {!isEditing ? (
-          <div>
-            <p>Username: {profile.username}</p>
-            <p>First Name: {profile.first_name}</p>
-            <p>Last Name: {profile.last_name}</p>
-            <p>Bio: {profile.bio}</p>
-            <button onClick={() => setIsEditing(true)}>Edit Profile</button>
-          </div>
-        ) : (
-          <form onSubmit={handleSubmit}>
-            <label>
-              First Name:
-              <input
-                type="text"
-                name="first_name"
-                value={formData.first_name}
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Last Name:
-              <input
-                type="text"
-                name="last_name"
-                value={formData.last_name}
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Username:
-              <input
-                type="text"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-              />
-            </label>
-            <label>
-              Bio:
-              <textarea
-                name="bio"
-                value={formData.bio}
-                onChange={handleChange}
-              />
-            </label>
-            <button type="submit">Save</button>
-          </form>
-        )}
-      </div>
-    </div>
+    <Container>
+      <ProfileCard>
+        <ProfileImage>
+          {profile.profile.profile_image ? (
+            <img src={'http://localhost:8000'+ profile.profile.profile_image} alt="Profile" />
+          ) : (
+            <div className="placeholder">No Image</div>
+          )}
+        </ProfileImage>
+        <ProfileDetails>
+          <h2>{profile.first_name} {profile.last_name}</h2>
+          <p><strong>Username:</strong> {profile.username}</p>
+          <p><strong>Email:</strong> {profile.email}</p>
+          <p><strong>Bio:</strong> {profile.profile.bio || 'No bio available'}</p>
+        </ProfileDetails>
+      </ProfileCard>
+    </Container>
   );
 };
 

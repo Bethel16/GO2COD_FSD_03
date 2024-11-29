@@ -23,7 +23,6 @@ interface Message {
   text: string;
   time: string;
 }
-
 // Styled components (No change here)
 const Container = styled.div`
   position: absolute;
@@ -214,6 +213,7 @@ const InputField = styled.input`
     color: #aaa;
   }
 `;
+
 // ChatApp Component with TypeScript interfaces
 const ChatApp: React.FC = () => {
   // State variables with types
@@ -260,7 +260,7 @@ const ChatApp: React.FC = () => {
     <Container>
       {/* Dynamic Contacts List */}
       <Contacts>
-        <h2>Contacts</h2>
+      <h2>Contacts</h2>
       <div>
         {contacts.length > 0 ? (
           contacts.map((contact) => (
@@ -321,7 +321,9 @@ const ChatApp: React.FC = () => {
           <div>No contacts available.</div>
         )}
       </div>
-      </Contacts>
+</Contacts>
+
+
 
       {/* Chat window */}
       {activeContact && (

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const NavBar = () => {
@@ -35,6 +35,9 @@ const NavBar = () => {
 
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav me-auto">
+          <li className="nav-item">
+                <a className="nav-link" href="/profile">My Profile</a>
+              </li>
             {!isLoggedIn && (
               <li className="nav-item">
                 <a className="nav-link" href="/register">Create Account</a>

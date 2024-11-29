@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'corsheaders',
     'channels',
     'chat_app' ,
-     'rest_framework',
+    'rest_framework',
     # If you're using DRF's browsable API, add this too:
     'rest_framework.authtoken',
 ]
@@ -160,6 +160,8 @@ CORS_ALLOW_METHODS = [
     'OPTIONS'
 ]
 
+
+# settings.py
 
 import os
 

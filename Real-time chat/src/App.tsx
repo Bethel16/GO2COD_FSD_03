@@ -6,12 +6,14 @@ import ChatApp from './components/ChatApp';
 import Navbar from './components/Navbar';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import UserProfile from './components/UserProfile';
 const App: React.FC = () => {
   return (
     <Router>
       <Navbar />
       <div className="container mt-4">
         <Routes>
+        <Route path="/profile" element={<UserProfile />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/mychat" element={<ChatApp />} />
