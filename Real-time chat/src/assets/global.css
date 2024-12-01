@@ -1,13 +1,20 @@
-@import url('https://fonts.googleapis.com/css?family=Red+Hat+Display:400,500,900&display=swap');
-
-/* Define CSS variables (replacing Sass variables) */
 :root {
-  --text-1: #333;
-  --text-2: #666;
-  --text-3: #999;
-  --line: #CCC;
-  --time-bg: #EEE;
-  --background: #F7F7F7;
+  --text-1: #eaeaea; /* Light text for contrast */
+  --background-light: #3a3a3a; /* Slightly darker light theme */
+  --background-dark: #121212; /* Darker background for dark theme */
+  --background-gradient: linear-gradient(135deg, #2e2e2e, #1a1a1a); /* Darker gradient */
+}
+
+body.light-theme {
+  background: var(--background-light);
+}
+
+body.dark-theme {
+  background: var(--background-dark);
+}
+
+body.gradient-theme {
+  background: var(--background-gradient);
 }
 
 body, html {
@@ -16,11 +23,27 @@ body, html {
   line-height: 1.25em;
   letter-spacing: 0.025em;
   color: var(--text-1);
-  background: var(--background);
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+
+  /* Default to dark background */
+  background: var(--background-dark);
 }
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+  
 
 .container {
   display: flex;

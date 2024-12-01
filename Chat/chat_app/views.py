@@ -111,20 +111,35 @@ from django.contrib.auth.models import User
 from .models import Profile, ChatRoom, Message
 from .serializers import ProfileSerializer, UserSerializer, ChatRoomSerializer, MessageSerializer
 
+from django.http import JsonResponse
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+from .serializers import UserSerializer
+
 @csrf_exempt
 def user_list_view(request):
     """
-    Custom view to list all users.
+    Custom view to list all users excluding the logged-in user (if any).
     """
     if request.method == "GET":
         try:
-            users = User.objects.all()
+            # Check if request.user is authenticated, otherwise exclude nothing
+            if request.user.is_authenticated:
+                users = User.objects.exclude(id=request.user.id)
+
+            else:
+                users = User.objects.all()
+                print(users)
+
+            # Serialize the user data
             users_data = [UserSerializer(user).data for user in users]
             return JsonResponse(users_data, safe=False, status=200)
         except Exception as e:
             return JsonResponse({'error': str(e)}, status=500)
 
+    # If request is not GET, return an error
     return JsonResponse({'error': 'GET request required'}, status=400)
+
 
 
 @csrf_exempt

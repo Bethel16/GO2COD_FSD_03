@@ -27,7 +27,7 @@ interface Message {
 // Styled components (No change here)
 const Container = styled.div`
   position: absolute;
-  top: 60%;
+  top: 50%;
   left: calc(50% + 12rem);
   transform: translate(-50%, -50%);
   display: flex;
@@ -147,7 +147,7 @@ const Chat = styled.div`
       border-radius: 1.125rem 1.125rem 1.125rem 0;
       min-height: 2.25rem;
       width: fit-content;
-      max-width: 66%;
+      max-width: 50%;
       box-shadow: 0 0 2rem rgba(0, 0, 0, 0.075), 0rem 1rem 1rem -1rem rgba(0, 0, 0, 0.1);
 
       &.parker {
